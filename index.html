@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.11.2  "></script>
+  </head>
+  <style>
+    .container {
+      display: flex;
+      gap: 2px;
+      margin-bottom: 10px;
+    }
+  </style>
+  <body>
+    <h1>Tenser Flow</h1>
+    <h3>Formula: y = 2x - 2</h3>
+    <h3>Ingrese el valor de "x" para la función</h1>
+    <div class="container">
+      <input type="text" name="" id="input" placeholder='valor de "x" ' />
+      <button id="predict">Predecir</button>
+    </div>
+    <button id="entrenar">Entrenar</button>
+    <div id="output_field"></div>
+  </body>
+  <script>
+    const predict = document.getElementById("predict");
+    predict.addEventListener("click", function f_predict() {
+      const valor_a_predecir = parseInt(document.getElementById("input").value);
+
+      const button = document.getElementById("entrenar");
+
+      button .addEventListener("click", async function learnLineal() {
+        const model = tf.sequential();
+        model.add(tf.layers.dense({ units: 1, inputShape: [1] }));
+
+        model.compile({
+          loss: "meanSquaredError",
+          optimizer: "sgd",
+        });
+
+        const xs = tf.tensor([-1, 0, 1, 2, 3, 4], [6, 1]);
+        const ys = tf.tensor([-4, -2, 0, 2, 4, 6], [6, 1]);
+
+        await model.fit(xs, ys, { epochs: 500 });
+
+        document.getElementById("output_field").innerText =
+          `Resultado de la prediccion para ${valor_a_predecir} es:` +
+          model.predict(tf.tensor2d([valor_a_predecir], [1, 1]));
+      });
+    });
+  </script>
+</html>
